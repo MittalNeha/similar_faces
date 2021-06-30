@@ -1,15 +1,18 @@
+import torch
+import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 
-from model import *
+from .dataset import FaceAttributesDataset
+from .model import MCNN
 
 # variables define
 baseFolder = '/content/'
 imgFolder = 'img_align_celeba/img_align_celeba'
 use_cuda = torch.cuda.is_available()
-batch_size = 32
+batch_size = 16
 device = torch.device("cuda" if use_cuda else "cpu")
 
 train_transform = transforms.Compose([
@@ -24,6 +27,8 @@ train_dataset = FaceAttributesDataset(baseFolder, imgFolder, 'list_attr_celeba.c
 train_loader = DataLoader(
     train_dataset,
     batch_size=batch_size, shuffle=True, **kwargs)
+
+print("batch_size is {}", batch_size)
 # TODO: test_dataset
 
 # MCNN model to be trained
@@ -80,7 +85,9 @@ def train(criterion, optimizer, schedular=None):
         train_loss += loss.item()
         train_accuracy += acc
         num_loops += 1
-    train_accuracy /= num_loops
+        if batch_idx % 100 == 0:
+            print("{}: loss {}, acc {}".format(num_loops, loss, acc))
+    train_accuracy = train_accuracy / num_loops
 
     return train_accuracy, train_loss
 
@@ -93,12 +100,12 @@ def fit_model(epochs=5):
     test_loss = []
 
     criterion = nn.BCELoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.5, momentum=0.9, )
+    optimizer = optim.SGD(net.parameters(), lr=0.5, momentum=0.9, )
 
     scheduler = ReduceLROnPlateau(optimizer=optimizer, patience=2, verbose=True)
 
     for epoch in range(1, epochs):
-        acc, loss = train(model, device, train_loader, criterion, optimizer, scheduler)
+        acc, loss = train(criterion, optimizer, scheduler)
         train_loss.append(loss)
         train_acc.append(acc)
 
@@ -107,11 +114,15 @@ def fit_model(epochs=5):
     return train_loss, train_acc, test_loss, test_acc
 
 
+def attributes_model():
+    # Train the MCNN model
+    hist = fit_model(2)
+    return net, hist
+
+
 def main():
     # Train the MCNN model
-    hist = fit_model(net, device, train_loader, 2)
-
-    return net, hist
+    hist = fit_model(2)
 
 
 if __name__ == '__main__':

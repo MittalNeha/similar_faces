@@ -1,10 +1,11 @@
+import torch
 import os
 import pandas as pd
 import numpy as np
 
 from PIL import Image
-from torch.utils.data import Dataset
 
+from torch.utils.data import Dataset
 
 generalFolder = '/content/'
 allAttributes = pd.read_csv(generalFolder + 'list_attr_celeba.csv')
@@ -14,23 +15,23 @@ The face attributes have been grouped into 9 groups
 
 '''
 attr_names = list(allAttributes.columns[1:])
-groups = [ ['Male',],
+groups = [['Male', ],
           ['Big_Nose', 'Pointy_Nose'],
-          ['Big_Lips', 'Smiling',  'Mouth_Slightly_Open', 'Wearing_Lipstick'],
+          ['Big_Lips', 'Smiling', 'Mouth_Slightly_Open', 'Wearing_Lipstick'],
           ['Arched_Eyebrows', 'Bags_Under_Eyes', 'Bushy_Eyebrows', 'Narrow_Eyes', 'Eyeglasses'],
           ['Attractive', 'Blurry', 'Oval_Face', 'Pale_Skin', 'Young', 'Heavy_Makeup'],
-          ['Black_Hair', 'Blond_Hair', 'Brown_Hair', 'Gray_Hair', 'Bald', 'Receding_Hairline', 'Bangs','Straight_Hair', 'Wavy_Hair', 'Wearing_Earrings', 'Wearing_Necklace', 'Wearing_Necktie', 'Wearing_Hat',],
+          ['Black_Hair', 'Blond_Hair', 'Brown_Hair', 'Gray_Hair', 'Bald', 'Receding_Hairline', 'Bangs', 'Straight_Hair',
+           'Wavy_Hair', 'Wearing_Earrings', 'Wearing_Necklace', 'Wearing_Necktie', 'Wearing_Hat', ],
           ['5_o_Clock_Shadow', 'Mustache', 'No_Beard', 'Sideburns', 'Goatee'],
           ['High_Cheekbones', 'Rosy_Cheeks'],
           ['Chubby', 'Double_Chin']
           ]
 
 
-def get_attr_groups(attributes, transform=None):
+def get_attr_groups(attributes, transforms=None):
     attr_groups = []
 
     for at in groups:
-
         b = [attributes[attr_names.index(a)] for a in at]
         attr_groups.append(b)
     # print(attr_groups)
@@ -67,6 +68,7 @@ class FaceAttributesDataset(Dataset):
     def __init__(self, root_dir, img_dir, attr_csv, transform=None):
         self.img_dir = root_dir + img_dir
         self.attributes = pd.read_csv(root_dir + attr_csv)
+        self.attributes = self.attributes.loc[:20000]
         self.transform = transform
 
     def __len__(self):
