@@ -36,3 +36,9 @@ This dataset has more than 200K images, each annotated with 40 attributes. Here 
 2. ## Face Similarity: 
 
    My idea for looking for similar faces is to use the attributes of each face to get a vector representation for it. For this I have trained a word2vec using training set. Given the vector space for each face, its easy to find nearby faces in the vector space.
+   
+   
+   
+   <img src="images/image2.png">
+   
+   
