@@ -16,7 +16,7 @@ CelebA: https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html
 
 This dataset has more than 200K images, each annotated with 40 attributes. Here is the table of these attributes.
 
-<image>
+<img src="images/List-of-the-40-face-attributes-provided-with-the-CelebA-database.png" alt="drawing" height="550">
 
 
 
@@ -27,9 +27,9 @@ This dataset has more than 200K images, each annotated with 40 attributes. Here 
    - Shared lower layers for all groups
    - The higher layers are shared for different attributes belonging to the same group
 
-   reference paper: "Attributes for Improved Attributes: A Multi-Task Network for Attribute Classification" - Emily M. Hand and Rama Chellappa
+   reference paper: "Attributes for Improved Attributes: A Multi-Task Network for Attribute Classification" - Emily M. Hand and Rama Chellappa [pdf](https://github.com/MittalNeha/similar_faces/blob/main/1604.07360.pdf)
 
-<MCNN image>
+<img src="images/download.png" alt="drawing" height="550">
 
 
 
